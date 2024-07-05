@@ -142,6 +142,9 @@ class MonorepoDependencyPlugin(poetry.plugins.application_plugin.ApplicationPlug
         event_name: str,
         dispatcher: cleo.events.event_dispatcher.EventDispatcher,
     ) -> None:
+        # Don't intercept our own custom commands (that inherit from commands we actually want to intercept)
+        if isinstance(event.command, (BuildWithVersionedPathDepsCommand, PublishWithVersionedPathDepsCommand)):
+            return
 
         if not isinstance(event.command, self.COMMANDS):
             return
